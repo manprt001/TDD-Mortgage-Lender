@@ -8,7 +8,6 @@ Objectives
 Use what you've learned about pair programming, TDD, and OOP to fulfill the acceptance criteria.
 Your final code should have:No compile errors.No failing tests.Descriptive commit messages.Multiple commits.Meet acceptance criteria.Have appropriate use of the four pillars of OOP.
 
-[Yesterday 4:25 PM] Joshi, Jayashri (Cognizant)
 
 Stories and Acceptance Criteria
 As a lender, I want to be able to check my available funds, so that I know how much money I can offer for loans.When I check my available funds
