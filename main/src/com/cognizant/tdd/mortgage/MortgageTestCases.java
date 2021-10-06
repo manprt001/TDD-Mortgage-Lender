@@ -42,10 +42,10 @@ public class MortgageTestCases {
     // And their loan status is <status>
     @Test
     public void testSeeStatus(){
-       assertEquals("Status: qualified", bank.qualification(new Applicant(21,700,100000),250000));
-        assertEquals("Status: denied", bank.qualification(new Applicant(37,700,100000), 250000));
-        assertEquals("Status: denied", bank.qualification(new Applicant(30,600,100000), 250000));
-        assertEquals("Status: qualified", bank.qualification(new Applicant(30,700,50000), 250000));
+       assertEquals("Status: qualified", bank.determineStatus(new Applicant(21,700,100000),250000));
+        assertEquals("Status: denied", bank.determineStatus(new Applicant(37,700,100000), 250000));
+        assertEquals("Status: denied", bank.determineStatus(new Applicant(30,600,100000), 250000));
+        assertEquals("Status: qualified", bank.determineStatus(new Applicant(30,700,50000), 250000));
 
     }
 
@@ -54,6 +54,14 @@ public class MortgageTestCases {
     //Given I have <available_funds> in available funds
     //When I process a qualified loan
     //Then the loan status is set to <status>
+    @Test
+    public void testApproveLoan(){
+        assertEquals("on hold", bank.processLoan(125000,100000));
+        assertEquals("approved", bank.processLoan(125000,200000));
+        assertEquals("approved", bank.processLoan(125000,125000));
+
+    }
+
 
 
     //When I process a not qualified loan

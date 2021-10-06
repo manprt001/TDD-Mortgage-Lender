@@ -56,7 +56,7 @@ public class Bank {
         applicants.add(app);
     }
 
-    public String qualification(Applicant app, int requestedamount){
+    public String determineStatus(Applicant app, int requestedamount){
         if(app.getDti()<36 && app.getCredit_score()>620 && app.getSavings()>=0.25*requestedamount){
             app.setQualification("qualified");
         }
@@ -81,6 +81,18 @@ public class Bank {
         }
 
         return("Status: " + app.getStatus());
+    }
+
+    public String processLoan(int loan_amount, int total){
+        String status;
+        if(loan_amount <= total){
+            status = "approved";
+        }
+        else {
+
+            status="on hold";
+        }
+        return status;
     }
 
 
