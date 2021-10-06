@@ -27,6 +27,11 @@ public class MortgageTestCases {
     //Given I have <current_amount> available funds
     //When I add <deposit_amount>
     //Then my available funds should be <total>
+    @Test
+    public void testSeeTotal(){
+        assertEquals(150000, bank.getTotal(new Bank(100000,50000)));
+        assertEquals(230000,bank.getTotal(new Bank(200000,30000)));
+    }
 
 
 

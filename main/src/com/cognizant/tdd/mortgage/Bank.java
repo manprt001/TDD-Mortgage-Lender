@@ -14,6 +14,11 @@ public class Bank {
 
     public Bank() {
     }
+    public Bank(int current_amount, int deposit_amount) {
+        this.current_amount = current_amount;
+        this.deposit_amount = deposit_amount;
+    }
+
 
     public int getCurrent_amount() {
         return current_amount;
@@ -37,6 +42,11 @@ public class Bank {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public int getTotal(Bank bank){
+        total = bank.getCurrent_amount() + bank.getDeposit_amount();
+        return total;
     }
 
 }
