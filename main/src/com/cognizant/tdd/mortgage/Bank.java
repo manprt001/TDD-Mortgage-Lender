@@ -1,6 +1,9 @@
 package com.cognizant.tdd.mortgage;
 
+import java.util.ArrayList;
+
 public class Bank {
+    ArrayList<Applicant> applicants = new ArrayList<>();
 
     private int current_amount;
     private int deposit_amount;
@@ -48,5 +51,38 @@ public class Bank {
         total = bank.getCurrent_amount() + bank.getDeposit_amount();
         return total;
     }
+
+    public void addApplicant(Applicant app){
+        applicants.add(app);
+    }
+
+    public String qualification(Applicant app, int requestedamount){
+        if(app.getDti()<36 && app.getCredit_score()>620 && app.getSavings()>=0.25*requestedamount){
+            app.setQualification("qualified");
+        }
+        else if(app.getDti()<36 && app.getCredit_score()>620 && (app.getSavings()<0.25*requestedamount)){
+            app.setQualification("partially qualified");
+        }
+        else{
+            app.setQualification("not qualified");
+        }
+
+        if(app.getQualification().equals("qualified")){
+            app.setStatus("qualified");
+            app.setLoan_amount(requestedamount);
+        }
+        else if(app.getQualification().equals("partially qualified")){
+            app.setStatus("qualified");
+            app.setLoan_amount(4*app.getSavings());
+        }
+        else{
+            app.setStatus("denied");
+            app.setLoan_amount(0);
+        }
+
+        return("Status: " + app.getStatus());
+    }
+
+
 
 }

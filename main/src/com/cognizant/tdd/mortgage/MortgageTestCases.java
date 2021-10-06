@@ -40,6 +40,14 @@ public class MortgageTestCases {
     // When they apply for a loan with <requested_amount>
     // Then their qualification is <qualification>And their loan amount is <loan_amount>
     // And their loan status is <status>
+    @Test
+    public void testSeeStatus(){
+       assertEquals("Status: qualified", bank.qualification(new Applicant(21,700,100000),250000));
+        assertEquals("Status: denied", bank.qualification(new Applicant(37,700,100000), 250000));
+        assertEquals("Status: denied", bank.qualification(new Applicant(30,600,100000), 250000));
+        assertEquals("Status: qualified", bank.qualification(new Applicant(30,700,50000), 250000));
+
+    }
 
 
     //As a lender, I want to only approve loans when I have available funds, so that I don't go bankrupt.
