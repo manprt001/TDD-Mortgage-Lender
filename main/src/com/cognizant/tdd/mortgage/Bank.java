@@ -104,6 +104,15 @@ public class Bank {
         }
     }
 
+    public String movetoPending(int reqAmount, int total){
+        int totalpending;
+        totalpending = reqAmount;
+        total = total - totalpending;
+
+        return total + " " + totalpending;
+
+    }
+
 
 
 }

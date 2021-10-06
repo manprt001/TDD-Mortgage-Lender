@@ -84,10 +84,17 @@ public class MortgageTestCases {
         }
 
 
-        //As a lender, I want to keep pending loan amounts in a separate account, so I don't extend too many offers and bankrupt myself.
-        //Given I have approved a loan
-        //Then the requested loan amount is moved from available funds to pending funds
-        //And I see the available and pending funds reflect the changes accordingly
+    //As a lender, I want to keep pending loan amounts in a separate account, so I don't extend too many offers and bankrupt myself.
+    //Given I have approved a loan
+    //Then the requested loan amount is moved from available funds to pending funds
+    //And I see the available and pending funds reflect the changes accordingly
+    @Test
+    public void testPending(){
+//        Applicant info = bank.determineStatus(new Applicant(21, 700, 100000), 125000);
+//        String approved = bank.processLoan(info,100000);
+//        bank.movetoPending(approved);
+        assertEquals("50000 250000", bank.movetoPending(250000,300000));
+    }
 
 
 
