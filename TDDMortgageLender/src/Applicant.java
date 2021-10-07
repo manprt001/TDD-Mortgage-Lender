@@ -1,5 +1,3 @@
-package com.cognizant.tdd.mortgage;
-
 public class Applicant {
 
     private int loan_amount;

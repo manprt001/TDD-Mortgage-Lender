@@ -1,5 +1,3 @@
-package com.cognizant.tdd.mortgage;
-
 import java.util.ArrayList;
 
 public class Bank {
@@ -113,6 +111,20 @@ public class Bank {
 
     }
 
+    public String processResponse(boolean accept,int totalpending, int loan_amount, int total){
+        String loan_status = null;
+        if ( accept == true){
+            totalpending = totalpending - loan_amount;
+            loan_status = "accepted";
+        }
+        else if (accept == false){
+            totalpending = totalpending - loan_amount ;
+            total = total + loan_amount;
+            loan_status ="rejected";
+           
 
+        }
+        return loan_status;
+    }
 
 }

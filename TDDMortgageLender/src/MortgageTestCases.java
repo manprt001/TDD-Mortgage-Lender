@@ -1,5 +1,3 @@
-package com.cognizant.tdd.mortgage;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -103,13 +101,15 @@ public class MortgageTestCases {
         //When the applicant accepts my loan offer
         //Then the loan amount is removed from the pending funds
         //And the loan status is marked as accepted
-
-
         //Given I have an approved loan
         //When the applicant rejects my loan offer
         //Then the loan amount is moved from the pending funds back to available funds
         //And the loan status is marked as rejected
-
+    @Test
+    public void testLoanStatus(){
+        assertEquals("accepted", bank.processResponse(true, 250000,150000,500000));
+        assertEquals("rejected", bank.processResponse(false, 250000,50000,500000));
+    }
 
         //As a lender, I want to check if there are any undecided loans, so that I can manage my time and money wisely.
         //Given there is an approved loan offered more than 3 days ago
