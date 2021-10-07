@@ -1,7 +1,11 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Bank {
-    ArrayList<Applicant> applicants = new ArrayList<>();
+    //ArrayList<Applicant> applicants = new ArrayList<>();
+    Map<Integer, Applicant> applicantMap = new HashMap<>();
 
     private int current_amount;
     private int deposit_amount;
@@ -51,10 +55,11 @@ public class Bank {
     }
 
     public void addApplicant(Applicant app){
-        applicants.add(app);
+        applicantMap.put(app.getId(),app);
     }
 
-    public Applicant determineStatus(Applicant app, int requestedamount){
+    public Applicant determineStatus(int id, int requestedamount){
+        Applicant app = applicantMap.get(id);
         if(app.getDti()<36 && app.getCredit_score()>620 && app.getSavings()>=0.25*requestedamount){
             app.setQualification("qualified");
         }
@@ -81,26 +86,33 @@ public class Bank {
         return app;
     }
 
-    public String processQualified(int loan_amount, int total){
+    public String processQualified(Applicant app, int total){
         String status;
-        if(loan_amount <= total){
-            status = "approved";
-        }
-        else {
-
-            status="on hold";
-        }
-        return status;
-    }
-
-    public String processLoan(Applicant app, int total){
+        int loan_amount = app.getLoan_amount();
         if(app.getStatus().equals("denied")){
-            return("Do not proceed!");
+            System.out.println("Do not proceed!");
+            app.setStatus("Do not proceed!");
         }
         else{
-            return processQualified(app.getLoan_amount(),total);
+            if(loan_amount <= total){
+                app.setStatus("approved");
+            }
+            else {
+                app.setStatus("on hold");
+            }
+
         }
+        return app.getStatus();
     }
+
+//    public void processLoan(Applicant app, int total){
+//        if(app.getStatus().equals("denied")){
+//            System.out.println("Do not proceed!");
+//        }
+//        else{
+//            processQualified(app,total);
+//        }
+//    }
 
     public String movetoPending(int reqAmount, int total){
         int totalpending;
@@ -141,4 +153,15 @@ public class Bank {
         return loan_status;
     }
 
+    public String getListOfApplicants(){
+        List<Applicant> idk = new ArrayList<>(applicantMap.values());
+        ArrayList<String> list = new ArrayList<>();
+        for(Applicant app : idk){
+            list.add("ApplicantID: " + app.getId() + " Status: " + app.getStatus() + " Loan Amount: " + app.getLoan_amount() + "\n");
+
+            //System.out.println(app.getStatus());
+        }
+        String idkstring = list.toString();
+        return idkstring;
+    }
 }

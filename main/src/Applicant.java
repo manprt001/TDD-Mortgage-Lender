@@ -1,5 +1,8 @@
 public class Applicant {
 
+
+
+    private int id;
     private int loan_amount;
     private double requested_amount;
     private int dti;
@@ -8,7 +11,8 @@ public class Applicant {
     private String qualification;
     private String status;
 
-    public Applicant(int dti, int credit_score, int savings) {
+    public Applicant(int id, int dti, int credit_score, int savings) {
+        this.id = id;
         this.dti = dti;
         this.credit_score = credit_score;
         this.savings = savings;
@@ -68,5 +72,13 @@ public class Applicant {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

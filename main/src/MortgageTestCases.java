@@ -40,19 +40,26 @@ public class MortgageTestCases {
     // And their loan status is <status>
     @Test
     public void testSeeStatus(){
-       String st1 = bank.determineStatus(new Applicant(21,700,100000),250000).getStatus();
-       assertEquals("qualified", st1);
-        String st2 = bank.determineStatus(new Applicant(37,700,100000), 250000).getStatus();
+        bank.addApplicant(new Applicant(1, 21,700,100000));
+        String st1 = bank.determineStatus(1,250000).getStatus();
+        assertEquals("qualified", st1);
+
+        bank.addApplicant(new Applicant(2, 37,700,100000));
+        String st2 = bank.determineStatus(2, 250000).getStatus();
         assertEquals("denied", st2);
-        String st3 = bank.determineStatus(new Applicant(30,600,100000), 250000).getStatus();
+
+        bank.addApplicant(new Applicant(3,30,600,100000));
+        String st3 = bank.determineStatus(3, 250000).getStatus();
         assertEquals("denied", st3);
-        String st4 = bank.determineStatus(new Applicant(30,700,50000), 250000).getStatus();
+
+        bank.addApplicant(new Applicant(4,30,700,50000));
+        String st4 = bank.determineStatus(4, 250000).getStatus();
         assertEquals("qualified", st4);
 
 //        assertEquals("Status: denied", bank.determineStatus(new Applicant(37,700,100000), 250000));
 //        assertEquals("Status: denied", bank.determineStatus(new Applicant(30,600,100000), 250000));
 //        assertEquals("Status: qualified", bank.determineStatus(new Applicant(30,700,50000), 250000));
-
+        //System.out.println(bank.getListOfApplicants());
     }
 
 
@@ -68,17 +75,28 @@ public class MortgageTestCases {
 //        assertEquals("approved", bank.processQualified(125000,200000));
 //        assertEquals("approved", bank.processQualified(125000,125000));
 
-        Applicant info = bank.determineStatus(new Applicant(21, 700, 100000), 125000);
-        assertEquals("on hold", bank.processLoan(info,100000));
+        bank.addApplicant(new Applicant(1, 21,700,100000));
+        Applicant st1 = bank.determineStatus(1,125000);
+//        Applicant info = bank.determineStatus(new Applicant(1,21, 700, 100000), 125000);
+        assertEquals("on hold", bank.processQualified(st1,100000));
 
-        Applicant info2 = bank.determineStatus(new Applicant(30,700,100000), 125000);
-        assertEquals("approved", bank.processLoan(info2,200000));
+        bank.addApplicant(new Applicant(2, 30,700,100000));
+        Applicant st2 = bank.determineStatus(2, 125000);
+//        Applicant info2 = bank.determineStatus(new Applicant(2,30,700,100000), 125000);
+        assertEquals("approved", bank.processQualified(st2,200000));
 
-        Applicant info3 = bank.determineStatus(new Applicant(30,600,100000), 125000);
-        assertEquals("Do not proceed!", bank.processLoan(info3,125000));
+        bank.addApplicant(new Applicant(3,30,600,100000));
+        Applicant st3 = bank.determineStatus(3, 125000);
+//       Applicant info3 = bank.determineStatus(new Applicant(3,30,600,100000), 125000);
+        assertEquals("Do not proceed!", bank.processQualified(st3,125000));
 
-        Applicant info4 = bank.determineStatus(new Applicant(30,700,50000), 125000);
-        assertEquals("approved", bank.processLoan(info4,125000));
+        bank.addApplicant(new Applicant(4,30,700,50000));
+        Applicant st4 = bank.determineStatus(4, 125000);
+//       Applicant info4 = bank.determineStatus(new Applicant(4,30,700,50000), 125000);
+        assertEquals("approved", bank.processQualified(st4,125000));
+
+        //System.out.println(bank.getListOfApplicants());
+
         }
 
 
@@ -126,6 +144,7 @@ public class MortgageTestCases {
         //Given there are loans in my system
         //When I search by loan status (qualified, denied, on hold, approved, accepted, rejected, expired)
         //Then I should see a list of loans and their details
+
 
 
 
