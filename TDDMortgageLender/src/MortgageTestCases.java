@@ -116,7 +116,11 @@ public class MortgageTestCases {
         //When I check for expired loans
         //Then the loan amount is move from the pending funds back to available funds
         //And the loan status is marked as expired
-
+    @Test
+    public void testundecidedLoan(){
+        assertEquals("expired", bank.checkExpired(4,250000,500000,250000));
+        assertEquals("undecided", bank.checkExpired(2,250000,500000,250000));
+    }
 
         //As a lender, I want to filter loans by status, so that I can have an overview.
         //Given there are loans in my system

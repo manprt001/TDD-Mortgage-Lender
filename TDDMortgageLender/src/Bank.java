@@ -127,4 +127,18 @@ public class Bank {
         return loan_status;
     }
 
+    public String checkExpired(int days, int loan_amount, int total, int totalpending){
+      String loan_status =  null;
+        if(days >3){
+            totalpending = totalpending - loan_amount ;
+            total = total + loan_amount;
+            loan_status ="expired";
+        }
+         else if(days<3){
+            loan_status ="undecided";
+
+        }
+        return loan_status;
+    }
+
 }
