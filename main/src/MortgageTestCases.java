@@ -10,6 +10,7 @@ public class MortgageTestCases {
     public void setUp(){
         bank = new Bank();
         bank.setCurrent_amount(500000);
+        bank.setTotal(300000);
     }
 
     //As a lender, I want to be able to check my available funds, so that I know how much money I can offer for loans.
@@ -40,20 +41,20 @@ public class MortgageTestCases {
     // And their loan status is <status>
     @Test
     public void testSeeStatus(){
-        bank.addApplicant(new Applicant(1, 21,700,100000));
-        String st1 = bank.determineStatus(1,250000).getStatus();
+        bank.addApplicant(new Applicant(1, 21,700,100000,250000));
+        String st1 = bank.determineStatus(1).getStatus();
         assertEquals("qualified", st1);
 
-        bank.addApplicant(new Applicant(2, 37,700,100000));
-        String st2 = bank.determineStatus(2, 250000).getStatus();
+        bank.addApplicant(new Applicant(2, 37,700,100000, 250000));
+        String st2 = bank.determineStatus(2).getStatus();
         assertEquals("denied", st2);
 
-        bank.addApplicant(new Applicant(3,30,600,100000));
-        String st3 = bank.determineStatus(3, 250000).getStatus();
+        bank.addApplicant(new Applicant(3,30,600,100000, 250000));
+        String st3 = bank.determineStatus(3).getStatus();
         assertEquals("denied", st3);
 
-        bank.addApplicant(new Applicant(4,30,700,50000));
-        String st4 = bank.determineStatus(4, 250000).getStatus();
+        bank.addApplicant(new Applicant(4,30,700,50000, 250000));
+        String st4 = bank.determineStatus(4).getStatus();
         assertEquals("qualified", st4);
 
 //        assertEquals("Status: denied", bank.determineStatus(new Applicant(37,700,100000), 250000));
@@ -75,23 +76,23 @@ public class MortgageTestCases {
 //        assertEquals("approved", bank.processQualified(125000,200000));
 //        assertEquals("approved", bank.processQualified(125000,125000));
 
-        bank.addApplicant(new Applicant(1, 21,700,100000));
-        Applicant st1 = bank.determineStatus(1,125000);
+        bank.addApplicant(new Applicant(1, 21,700,100000, 125000));
+        Applicant st1 = bank.determineStatus(1);
 //        Applicant info = bank.determineStatus(new Applicant(1,21, 700, 100000), 125000);
         assertEquals("on hold", bank.processQualified(st1,100000));
 
-        bank.addApplicant(new Applicant(2, 30,700,100000));
-        Applicant st2 = bank.determineStatus(2, 125000);
+        bank.addApplicant(new Applicant(2, 30,700,100000, 125000));
+        Applicant st2 = bank.determineStatus(2);
 //        Applicant info2 = bank.determineStatus(new Applicant(2,30,700,100000), 125000);
         assertEquals("approved", bank.processQualified(st2,200000));
 
-        bank.addApplicant(new Applicant(3,30,600,100000));
-        Applicant st3 = bank.determineStatus(3, 125000);
+        bank.addApplicant(new Applicant(3,30,600,100000, 125000));
+        Applicant st3 = bank.determineStatus(3);
 //       Applicant info3 = bank.determineStatus(new Applicant(3,30,600,100000), 125000);
         assertEquals("Do not proceed!", bank.processQualified(st3,125000));
 
-        bank.addApplicant(new Applicant(4,30,700,50000));
-        Applicant st4 = bank.determineStatus(4, 125000);
+        bank.addApplicant(new Applicant(4,30,700,50000, 125000));
+        Applicant st4 = bank.determineStatus(4);
 //       Applicant info4 = bank.determineStatus(new Applicant(4,30,700,50000), 125000);
         assertEquals("approved", bank.processQualified(st4,125000));
 
@@ -106,10 +107,15 @@ public class MortgageTestCases {
     //And I see the available and pending funds reflect the changes accordingly
     @Test
     public void testPending(){
-//        Applicant info = bank.determineStatus(new Applicant(21, 700, 100000), 125000);
-//        String approved = bank.processLoan(info,100000);
-//        bank.movetoPending(approved);
-        assertEquals("50000 250000", bank.movetoPending(250000,300000));
+        bank.addApplicant(new Applicant(2, 30,700,100000, 125000));
+        Applicant st2 = bank.determineStatus(2);
+        bank.processQualified(st2,bank.getTotal());
+        assertEquals("175000 125000", bank.movetoPending(st2.getRequested_amount(),bank.getTotal(), bank.getTotalpending()));
+
+        bank.addApplicant(new Applicant(4,30,700,50000, 125000));
+        Applicant st4 = bank.determineStatus(4);
+        bank.processQualified(st4,bank.getTotal());
+        assertEquals("50000 250000", bank.movetoPending(st4.getRequested_amount(),bank.getTotal(), bank.getTotalpending()));
     }
 
 
@@ -125,8 +131,22 @@ public class MortgageTestCases {
         //And the loan status is marked as rejected
     @Test
     public void testLoanStatus(){
-        assertEquals("accepted", bank.processResponse(true, 250000,150000,500000));
-        assertEquals("rejected", bank.processResponse(false, 250000,50000,500000));
+        //assertEquals("accepted", bank.processResponse(true, 250000,150000,500000));
+        //assertEquals("rejected", bank.processResponse(false, 250000,50000,500000));
+
+
+        bank.addApplicant(new Applicant(2, 30,700,100000, 125000));
+        Applicant st2 = bank.determineStatus(2);
+        bank.processQualified(st2,bank.getTotal());
+        bank.movetoPending(st2.getRequested_amount(),bank.getTotal(), bank.getTotalpending());
+        assertEquals("accepted", bank.processResponse(st2,true, bank.getTotalpending(),st2.getRequested_amount(),bank.getTotal()));
+
+        bank.addApplicant(new Applicant(4, 30,700,100000, 125000));
+        Applicant st3 = bank.determineStatus(2);
+        bank.processQualified(st3,bank.getTotal());
+        bank.movetoPending(st3.getRequested_amount(),bank.getTotal(), bank.getTotalpending());
+        assertEquals("rejected", bank.processResponse(st3,false, bank.getTotalpending(),st3.getRequested_amount(),bank.getTotal()));
+
     }
 
         //As a lender, I want to check if there are any undecided loans, so that I can manage my time and money wisely.
@@ -136,16 +156,99 @@ public class MortgageTestCases {
         //And the loan status is marked as expired
     @Test
     public void testundecidedLoan(){
-        assertEquals("expired", bank.checkExpired(4,250000,500000,250000));
-        assertEquals("undecided", bank.checkExpired(2,250000,500000,250000));
+//        assertEquals("expired", bank.checkExpired(4,250000,500000,250000));
+//        assertEquals("undecided", bank.checkExpired(2,250000,500000,250000));
+
+        bank.addApplicant(new Applicant(2, 30,700,100000, 125000));
+        Applicant st2 = bank.determineStatus(2);
+        bank.processQualified(st2,bank.getTotal());
+        bank.movetoPending(st2.getRequested_amount(),bank.getTotal(), bank.getTotalpending());
+        bank.processResponse(st2,true, bank.getTotalpending(),st2.getRequested_amount(),bank.getTotal());
+        assertEquals("expired", bank.checkExpired(st2,4,st2.getRequested_amount(),bank.getTotal(),bank.getTotalpending()));
+
+        bank.addApplicant(new Applicant(4, 30,700,50000, 125000));
+        Applicant st3 = bank.determineStatus(2);
+        bank.processQualified(st3,bank.getTotal());
+        bank.movetoPending(st3.getRequested_amount(),bank.getTotal(), bank.getTotalpending());
+        bank.processResponse(st3, true, bank.getTotalpending(),st3.getRequested_amount(),bank.getTotal());
+        assertEquals("undecided", bank.checkExpired(st2,2,st3.getRequested_amount(),bank.getTotal(),bank.getTotalpending()));
+
+
+
+
     }
 
         //As a lender, I want to filter loans by status, so that I can have an overview.
         //Given there are loans in my system
         //When I search by loan status (qualified, denied, on hold, approved, accepted, rejected, expired)
         //Then I should see a list of loans and their details
+        @Test
+        public void testFilterLoans() {
+            bank.addApplicant(new Applicant(1, 21, 700, 100000, 250000));
+            String st1 = bank.determineStatus(1).getStatus();
+            assertEquals("qualified", st1);
+            bank.addApplicant(new Applicant(2, 37, 700, 100000, 250000));
+            String st2 = bank.determineStatus(2).getStatus();
+            assertEquals("denied", st2);
+            bank.addApplicant(new Applicant(3, 30, 600, 100000, 250000));
+            String st3 = bank.determineStatus(3).getStatus();
+            assertEquals("denied", st3);
+            bank.addApplicant(new Applicant(4, 30, 700, 50000, 250000));
+            String st4 = bank.determineStatus(4).getStatus();
+            assertEquals("qualified", st4);
+            bank.addApplicant(new Applicant(5, 21, 700, 100000, 125000));
+            Applicant st5 = bank.determineStatus(5);
+            assertEquals("on hold", bank.processQualified(st5, 100000));
+            bank.addApplicant(new Applicant(6, 30, 700, 100000, 125000));
+            Applicant st6 = bank.determineStatus(6);
+            assertEquals("approved", bank.processQualified(st6, 200000));
+            bank.addApplicant(new Applicant(7, 30, 600, 100000, 125000));
+            Applicant st7 = bank.determineStatus(7);
+            assertEquals("Do not proceed!", bank.processQualified(st7, 125000));
+            bank.addApplicant(new Applicant(8, 30, 700, 50000, 125000));
+            Applicant st8 = bank.determineStatus(8);
+            assertEquals("approved", bank.processQualified(st8, 125000));
+
+            bank.addApplicant(new Applicant(9, 30,700,100000, 125000));
+            Applicant st9 = bank.determineStatus(9);
+            bank.processQualified(st9,bank.getTotal());
+            bank.movetoPending(st9.getRequested_amount(),bank.getTotal(), bank.getTotalpending());
+            assertEquals("accepted", bank.processResponse(st9,true, bank.getTotalpending(),st9.getRequested_amount(),bank.getTotal()));
+
+            bank.addApplicant(new Applicant(10, 30,700,100000, 125000));
+            Applicant st10 = bank.determineStatus(10);
+            bank.processQualified(st10,bank.getTotal());
+            bank.movetoPending(st10.getRequested_amount(),bank.getTotal(), bank.getTotalpending());
+            assertEquals("rejected", bank.processResponse(st10,false, bank.getTotalpending(),st10.getRequested_amount(),bank.getTotal()));
+
+            bank.addApplicant(new Applicant(11, 30,700,100000, 125000));
+            Applicant st11 = bank.determineStatus(11);
+            bank.processQualified(st11,bank.getTotal());
+            bank.movetoPending(st11.getRequested_amount(),bank.getTotal(), bank.getTotalpending());
+            bank.processResponse(st11,true, bank.getTotalpending(),st11.getRequested_amount(),bank.getTotal());
+            assertEquals("expired", bank.checkExpired(st11,4,st11.getRequested_amount(),bank.getTotal(),bank.getTotalpending()));
+
+
+
+            assertEquals("[ApplicantID: 1 Status: qualified Loan Amount: 250000\n" +
+                    ", ApplicantID: 2 Status: denied Loan Amount: 0\n" +
+                    ", ApplicantID: 3 Status: denied Loan Amount: 0\n" +
+                    ", ApplicantID: 4 Status: qualified Loan Amount: 200000\n" +
+                    ", ApplicantID: 5 Status: on hold Loan Amount: 125000\n" +
+                    ", ApplicantID: 6 Status: approved Loan Amount: 125000\n" +
+                    ", ApplicantID: 7 Status: Do not proceed! Loan Amount: 0\n" +
+                    ", ApplicantID: 8 Status: approved Loan Amount: 125000\n" +
+                    ", ApplicantID: 9 Status: accepted Loan Amount: 125000\n" +
+                    ", ApplicantID: 10 Status: rejected Loan Amount: 125000\n" +
+                    ", ApplicantID: 11 Status: expired Loan Amount: 125000\n" +
+                    "]", bank.getListOfApplicants());
+
+            //System.out.println(bank.getListOfApplicants());
 
 
 
 
+
+
+        }
 }

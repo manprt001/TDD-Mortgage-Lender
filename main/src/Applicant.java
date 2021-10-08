@@ -4,18 +4,19 @@ public class Applicant {
 
     private int id;
     private int loan_amount;
-    private double requested_amount;
+    private int requested_amount;
     private int dti;
     private int credit_score;
     private int savings;
     private String qualification;
     private String status;
 
-    public Applicant(int id, int dti, int credit_score, int savings) {
+    public Applicant(int id, int dti, int credit_score, int savings, int requested_amount) {
         this.id = id;
         this.dti = dti;
         this.credit_score = credit_score;
         this.savings = savings;
+        this.requested_amount = requested_amount;
     }
 
     public int getDti() {
@@ -50,11 +51,11 @@ public class Applicant {
         this.loan_amount = loan_amount;
     }
 
-    public double getRequested_amount() {
+    public int getRequested_amount() {
         return requested_amount;
     }
 
-    public void setRequested_amount(double requested_amount) {
+    public void setRequested_amount(int requested_amount) {
         this.requested_amount = requested_amount;
     }
 

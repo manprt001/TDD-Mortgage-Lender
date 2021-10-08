@@ -11,6 +11,16 @@ public class Bank {
     private int deposit_amount;
     private int total;
 
+    public int getTotalpending() {
+        return totalpending;
+    }
+
+    public void setTotalpending(int totalpending) {
+        this.totalpending = totalpending;
+    }
+
+    private int totalpending;
+
     public Bank(int current_amount, int deposit_amount, int total) {
         this.current_amount = current_amount;
         this.deposit_amount = deposit_amount;
@@ -58,12 +68,12 @@ public class Bank {
         applicantMap.put(app.getId(),app);
     }
 
-    public Applicant determineStatus(int id, int requestedamount){
+    public Applicant determineStatus(int id){
         Applicant app = applicantMap.get(id);
-        if(app.getDti()<36 && app.getCredit_score()>620 && app.getSavings()>=0.25*requestedamount){
+        if(app.getDti()<36 && app.getCredit_score()>620 && app.getSavings()>=0.25*app.getRequested_amount()){
             app.setQualification("qualified");
         }
-        else if(app.getDti()<36 && app.getCredit_score()>620 && (app.getSavings()<0.25*requestedamount)){
+        else if(app.getDti()<36 && app.getCredit_score()>620 && (app.getSavings()<0.25*app.getRequested_amount())){
             app.setQualification("partially qualified");
         }
         else{
@@ -72,7 +82,7 @@ public class Bank {
 
         if(app.getQualification().equals("qualified")){
             app.setStatus("qualified");
-            app.setLoan_amount(requestedamount);
+            app.setLoan_amount(app.getRequested_amount());
         }
         else if(app.getQualification().equals("partially qualified")){
             app.setStatus("qualified");
@@ -114,54 +124,54 @@ public class Bank {
 //        }
 //    }
 
-    public String movetoPending(int reqAmount, int total){
-        int totalpending;
-        totalpending = reqAmount;
-        total = total - totalpending;
+    public String movetoPending(int reqAmount, int total, int pending){
+        setTotalpending(pending + reqAmount);   //250000
+        //totalpending = reqAmount;
+        setTotal(total - reqAmount);    //50000
+        //total = total - totalpending;
 
-        return total + " " + totalpending;
+        return getTotal() + " " + getTotalpending();
 
     }
 
-    public String processResponse(boolean accept,int totalpending, int loan_amount, int total){
-        String loan_status = null;
+    public String processResponse(Applicant app, boolean accept,int totalpending, int loan_amount, int total){
         if ( accept == true){
             totalpending = totalpending - loan_amount;
-            loan_status = "accepted";
+            app.setStatus("accepted");
         }
         else if (accept == false){
             totalpending = totalpending - loan_amount ;
             total = total + loan_amount;
-            loan_status ="rejected";
+            app.setStatus("rejected");
            
 
         }
-        return loan_status;
+        return app.getStatus();
     }
 
-    public String checkExpired(int days, int loan_amount, int total, int totalpending){
-      String loan_status =  null;
+    public String checkExpired(Applicant app, int days, int loan_amount, int total, int totalpending){
         if(days >3){
             totalpending = totalpending - loan_amount ;
             total = total + loan_amount;
-            loan_status ="expired";
+            app.setStatus("expired");
         }
          else if(days<3){
-            loan_status ="undecided";
+            app.setStatus("undecided");
 
         }
-        return loan_status;
+        return app.getStatus();
     }
 
     public String getListOfApplicants(){
-        List<Applicant> idk = new ArrayList<>(applicantMap.values());
+        List<Applicant> mapList = new ArrayList<>(applicantMap.values());
         ArrayList<String> list = new ArrayList<>();
-        for(Applicant app : idk){
+        for(Applicant app : mapList){
             list.add("ApplicantID: " + app.getId() + " Status: " + app.getStatus() + " Loan Amount: " + app.getLoan_amount() + "\n");
 
             //System.out.println(app.getStatus());
         }
-        String idkstring = list.toString();
-        return idkstring;
+        String listString = list.toString();
+        return listString;
     }
+
 }
