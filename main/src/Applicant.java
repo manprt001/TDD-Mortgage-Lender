@@ -1,7 +1,5 @@
 public class Applicant {
 
-
-
     private int id;
     private int loan_amount;
     private int requested_amount;
